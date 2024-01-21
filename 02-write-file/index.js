@@ -8,14 +8,15 @@ const newline = readline.createInterface({
   output: process.stdout
 });
 
+
 const writableStream = fs.createWriteStream(fullPath, { flags: 'a' });
 console.log('Hello. You can enter text. Type "exit" to exit.');
+
 newline.prompt();
 
 //  check input
 newline.on('line', (input) => {
   if (input === 'exit') {
-    console.log('Exit');
     newline.close(); 
     process.exit(); 
   }
@@ -25,13 +26,13 @@ newline.on('line', (input) => {
 
 
 newline.on('close', () => {
-  console.log('Exit');
+  console.log('farewell phrase and exit.');
   process.exit();
 });
 
 
-process.on('SIGINT', () => {
-  console.log('Exit (Ctrl+C).');
+/* process.on('SIGINT', () => {
+  console.log('farewell phrase and exit.');
   newline.close();
   process.exit();
-});
+}); */

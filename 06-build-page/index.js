@@ -26,7 +26,7 @@ async function copyAssets(assetsPath, AssetsCopyPath) {
 }
 const assetsPath = path.join(__dirname, 'assets');
 const AssetsCopyPath = path.join(__dirname, 'project-dist/assets');
-//copyAssets(assetsPath, AssetsCopyPath)
+copyAssets(assetsPath, AssetsCopyPath)
 
 async function mergeStyles(stylesPath, stylesNewPath) {
     const stylesArr = [];
@@ -42,22 +42,24 @@ async function mergeStyles(stylesPath, stylesNewPath) {
   } 
 stylesPath = path.join(__dirname, 'styles');
 stylesNewPath = path.join(__dirname, 'project-dist/style.css');
-//mergeStyles(stylesPath, stylesNewPath);
+mergeStyles(stylesPath, stylesNewPath);
 
-async function replaceTags(tag, text) {
-    console.log(tag)
-    console.log(text)
-
-}
-
-async function readTagFiles(pathForTagFiles) {
+async function replaceTags(pathForTagFiles) {
+    const templateFilePath = path.join(__dirname, 'template.html');
+   const indexFilePath = path.join(__dirname, 'project-dist/index.html');
     const files = await fs.readdir(pathForTagFiles);
+    let templateContent = await fs.readFile(templateFilePath, 'utf-8');
     for (const file of files) {
       const currentFilePath = path.join(pathForTagFiles, file);
-      const fileName = file.name;
+      const fileName = path.basename(currentFilePath, path.extname(currentFilePath));
       const fileText = await fs.readFile(currentFilePath, 'utf-8');
-      replaceTags(fileName, fileText)
+
+      
+   const regex = new RegExp(`{{${fileName}}}`, 'g');
+   templateContent = templateContent.replace(regex, fileText);
 }
+await fs.writeFile(indexFilePath, templateContent, 'utf-8');
 }
+
 pathForTagFiles = path.join(__dirname, 'components');
-readTagFiles(pathForTagFiles)
+replaceTags(pathForTagFiles)

@@ -4,8 +4,13 @@ const fullPath = path.join(__dirname, 'files');
 const copyPath = path.join(__dirname, 'files-copy');
 async function copyFolder(fullPath, copyPath) {
   await fs.mkdir(copyPath, { recursive: true });
-  const files = await fs.readdir(fullPath);
-  for (const file of files) {
+  // clear
+  let files = await fs.readdir(copyPath);
+  for (let file of files) {
+    await fs.rm(path.join(copyPath, file));
+  }
+  files = await fs.readdir(fullPath);
+  for (file of files) {
     const tempFullPath = path.join(fullPath, file);
     const tempCopyPath = path.join(copyPath, file);
     const fileStats = await fs.stat(tempFullPath);
